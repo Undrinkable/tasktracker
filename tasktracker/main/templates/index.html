@@ -1,0 +1,87 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}" />
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+	<script src="{% static 'js/bootstrap.js' %}"></script>
+<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+        <title>Task Tracker</title>
+    </head>
+    <body>
+        <nav class="navbar navbar-default navbar-static-top text-center">
+		<h1>Task Tracker</h1>
+	</nav>        
+
+        
+        <main class="container" role="main">
+            <div class="panel panel-default">
+            <div class="panel-heading">
+		<!-- Button trigger modal -->
+		<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">+ Add Task</button>
+	    </div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel">Add task</h4>
+      </div>
+      <div class="modal-body">
+      	<form method="post" action="/">
+		{% csrf_token %}
+		{{ formset.management_form }}
+    		{% for form in formset %}
+        		{% for field in form %}
+            			<div class="form-group">
+					{{ field.label_tag }} {{ field }}
+				</div>
+        		{% endfor %}
+	    	{% endfor %}
+	<button type="submit" class="btn btn-primary" value="Submit"/>
+	</form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+ 
+            <div class="panel-body">
+               
+                <table class="table">
+		<tr>
+			<th/><th>Due date</th><th>Priority</th><th>Status</th>
+		</tr>
+              {% for form in displayset %}      
+		    <tr>
+                        {% for field in form %}
+				{% if field.label_tag == "Name" %}
+				<th>{{field.value}}</th>
+				{% else %}		
+				<td>{{field}}</td> 
+				{%endif%}
+			{% endfor %}
+                    </tr>
+		{% endfor %}
+                </table>
+            </div>
+        </main>
+<script>
+  $(function() {
+    $( ".datepicker" ).datepicker({
+      changeMonth: true,
+      changeYear: true,
+      yearRange: "2016:2020",
+      // You can put more options here.
+
+    });
+  });
+  </script>
+	</body>
+</html>
